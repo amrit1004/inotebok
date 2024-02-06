@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 const NotesSchema = new Schema({
    user:{
-    type: mongoose.Schema.type.objectId ,
+    type: mongoose.Schema.Types.ObjectId ,
     ref : 'user'
    },
    title:{
@@ -16,7 +16,7 @@ const NotesSchema = new Schema({
    } ,
    tag:{
     type: String ,
-    default: general
+    default: "General"
    },
    date:{
     type: String ,
