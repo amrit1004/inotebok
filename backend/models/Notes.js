@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const {Schema} = mongoose;
 const NotesSchema = new Schema({
    title:{
     type: String ,
@@ -12,7 +12,7 @@ const NotesSchema = new Schema({
    } ,
    tag:{
     type: String ,
-    default: general
+    default: "General"
    },
    date:{
     type: String ,
