@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 const {body ,validationResult} = require('express-validator');
 const User = require('../models/User');
 const JWT_SECRET = 'Amrit$inghal'
-// Create a User using : Post "api/auth/" Doesnot require Auth
+// Create a User using : Post "api/auth/create" Doesnot require Auth
 router.post('/createuser',[
     body('name').isLength({min:3}) ,
     body('email').isEmail() ,
@@ -43,4 +43,40 @@ router.post('/createuser',[
     res.status(500).send("Some error occured")
 }
 })
+// login a User using : Post "api/auth/login"
+router.post('/login',[
+
+    body('email' ,'Enter a valid Email').isEmail(),
+    body('password' ,'Enter a valid Email').exists(),
+] , async (req ,res)=>{
+    const errors = validationResult(req);
+    console.log(errors)
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors:errors.array()});
+    }
+    const {email , password } = req.body;
+    try {
+        let user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({error:"Pls try to login with correct credential"});
+        }
+        const passwordCompare =await bcrypt.compare(password ,user.password)
+        if(!passwordCompare){
+            return res.status(400).json({error:"Pls try to login with correct credential"});
+        }
+        const data = {
+            user:{
+             id :user.id
+            }
+        }
+        const authToken = jwt.sign(data ,JWT_SECRET)
+        //console.log(authToken);
+        res.json({authToken})
+            
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Some error occured")
+    }
+})
+
 module.exports = router
