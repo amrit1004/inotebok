@@ -4,6 +4,7 @@ const router = express.Router();
 var jwt = require('jsonwebtoken');
 const {body ,validationResult} = require('express-validator');
 const User = require('../models/User');
+const fetchuser = require('../middleware/fetchuser');
 const JWT_SECRET = 'Amrit$inghal'
 // Create a User using : Post "api/auth/create" Doesnot require Auth
 router.post('/createuser',[
@@ -78,5 +79,15 @@ router.post('/login',[
         res.status(500).send("Some error occured")
     }
 })
-
+// get user detail
+router.post('/getuser', fetchuser , async (req ,res)=>{
+    try {
+        userId = req.data.id;
+        const user = await User.findById(userId).select("-password")
+        res.send(user)
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Some error occured")
+    }
+})
 module.exports = router
