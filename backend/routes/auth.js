@@ -10,13 +10,13 @@ const JWT_SECRET = 'Amrit$inghal'
 router.post('/createuser',[
     body('name').isLength({min:3}) ,
     body('email').isEmail() ,
-    body('password').isLength({min:5}) ,
+    body('password' , 'password must be atleast 5 character').isLength({min:5}) ,
 
 ] , async (req ,res)=>{
     const errors = validationResult(req);
     console.log(errors)
     if(!errors.isEmpty()){
-        return res.send(400).json({errors:errors.array()});
+        return res.status(400).json({errors:errors.array()});
     }
     // check whether the email exist already
     try{
@@ -82,7 +82,7 @@ router.post('/login',[
 // get user detail
 router.post('/getuser', fetchuser , async (req ,res)=>{
     try {
-        userId = req.data.id;
+        userId = req.user.id;
         const user = await User.findById(userId).select("-password")
         res.send(user)
     } catch (error) {
