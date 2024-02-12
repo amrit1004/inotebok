@@ -1,12 +1,11 @@
 
 //import notecontext from '../context/notecontext';
 import Notes from './Notes';
- const Home = () => {
-//   const context = useContext(notecontext)
-//   const{notes , setNotes } = context;
+ const Home = (props) => {
+ const{showAlert} = props
   return (
     <div>
-<Notes/>
+<Notes showAlert = {showAlert}/>
     </div>
   )
 }
